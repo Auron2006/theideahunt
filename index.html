@@ -56,7 +56,9 @@
         async function loadIdeas() {
             try {
                 const response = await fetch('ideaslist.json');
-                ideas = await response.json();
+                const data = await response.json();
+                ideas = data.ideas;  // Access the ideas array within the loaded object
+                console.log('Ideas loaded:', ideas);
                 displayIdeas();
             } catch (error) {
                 console.error('Error loading ideas:', error);
