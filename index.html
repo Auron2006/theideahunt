@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Idea Comparison Demo</title>
+    <title>Idea Comparison</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -40,19 +40,42 @@
 <body>
     <div class="container">
         <div class="idea" id="idea1" onclick="vote('idea1')">
-            <p>Idea 1: Let's create a platform where users can share their book reviews!</p>
+            <p></p>
         </div>
         <div class="idea" id="idea2" onclick="vote('idea2')">
-            <p>Idea 2: How about an app that suggests the best workout based on the weather?</p>
+            <p></p>
         </div>
     </div>
 
     <script>
-        function vote(ideaId) {
-            alert('You voted for ' + ideaId + '!');
-            // Placeholder for sending the vote to the server or handling it further
-            // In a real app, you'd send this information to the backend via an API call
+        const ideas = [
+            "Let's build a platform where ideas compete!",
+            "An app that suggests workouts based on weather conditions!",
+            "A social network for book lovers to share reviews.",
+            "A marketplace for renting out personal sports equipment.",
+            "An AI-powered meal planner based on your fridge's contents.",
+            "A travel app that builds itineraries based on your interests."
+        ];
+
+        let currentIndex1 = 0;
+        let currentIndex2 = 1;
+
+        function displayIdeas() {
+            document.getElementById('idea1').querySelector('p').textContent = ideas[currentIndex1];
+            document.getElementById('idea2').querySelector('p').textContent = ideas[currentIndex2];
         }
+
+        function vote(chosenIdea) {
+            if (chosenIdea === 'idea1') {
+                currentIndex2 = (currentIndex2 + 1) % ideas.length;
+            } else {
+                currentIndex1 = (currentIndex1 + 1) % ideas.length;
+            }
+            displayIdeas();
+        }
+
+        // Initial display of ideas
+        displayIdeas();
     </script>
 </body>
 </html>
