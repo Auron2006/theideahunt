@@ -48,21 +48,28 @@
     </div>
 
     <script>
-        const ideas = [
-            "Let's build a platform where ideas compete!",
-            "An app that suggests workouts based on weather conditions!",
-            "A social network for book lovers to share reviews.",
-            "A marketplace for renting out personal sports equipment.",
-            "An AI-powered meal planner based on your fridge's contents.",
-            "A travel app that builds itineraries based on your interests."
-        ];
-
+        let ideas = [];
         let currentIndex1 = 0;
         let currentIndex2 = 1;
 
+        // Function to load ideas from the JSON file
+        async function loadIdeas() {
+            try {
+                const response = await fetch('ideaslist.json');
+                ideas = await response.json();
+                displayIdeas();
+            } catch (error) {
+                console.error('Error loading ideas:', error);
+            }
+        }
+
         function displayIdeas() {
-            document.getElementById('idea1').querySelector('p').textContent = ideas[currentIndex1];
-            document.getElementById('idea2').querySelector('p').textContent = ideas[currentIndex2];
+            if (ideas.length > 1) {
+                document.getElementById('idea1').querySelector('p').textContent = ideas[currentIndex1].content;
+                document.getElementById('idea2').querySelector('p').textContent = ideas[currentIndex2].content;
+            } else {
+                console.error('Not enough ideas to display.');
+            }
         }
 
         function vote(chosenIdea) {
@@ -74,8 +81,8 @@
             displayIdeas();
         }
 
-        // Initial display of ideas
-        displayIdeas();
+        // Load ideas when the page is ready
+        window.onload = loadIdeas;
     </script>
 </body>
 </html>
