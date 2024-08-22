@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idea Comparison Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        .idea {
+            width: 250px;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .idea:hover {
+            transform: scale(1.05);
+        }
+        .idea p {
+            font-size: 16px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="idea" id="idea1" onclick="vote('idea1')">
+            <p>Idea 1: Let's create a platform where users can share their book reviews!</p>
+        </div>
+        <div class="idea" id="idea2" onclick="vote('idea2')">
+            <p>Idea 2: How about an app that suggests the best workout based on the weather?</p>
+        </div>
+    </div>
+
+    <script>
+        function vote(ideaId) {
+            alert('You voted for ' + ideaId + '!');
+            // Placeholder for sending the vote to the server or handling it further
+            // In a real app, you'd send this information to the backend via an API call
+        }
+    </script>
+</body>
+</html>
