@@ -124,6 +124,42 @@ async function submitIdea(event) {
     }
 }
 
+async function loadLeaderboard() {
+    try {
+        const q = query(collection(db, "ideas"), orderBy("rating", "desc"), limit(3));
+        const querySnapshot = await getDocs(q);
+        
+        const leaderboardContainer = document.getElementById('leaderboard');
+        leaderboardContainer.innerHTML = '';  // Clear existing leaderboard
+
+        querySnapshot.forEach((doc, index) => {
+            const ideaData = doc.data();
+            const ideaSnippet = ideaData.content.length > 20 ? ideaData.content.substring(0, 20) + '...' : ideaData.content;
+            
+            const entryDiv = document.createElement('div');
+            entryDiv.className = 'leaderboard-entry';
+            entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
+
+            entryDiv.innerHTML = `
+                <span class="rank">${index + 1}</span>
+                <span class="idea-title">${ideaSnippet}</span>
+                <div class="idea-details">
+                    <p>${ideaData.content}</p>
+                </div>
+            `;
+            leaderboardContainer.appendChild(entryDiv);
+        });
+
+    } catch (error) {
+        console.error('Error loading leaderboard:', error);
+    }
+}
+
+// Function to toggle the display of full idea details
+function toggleIdeaDetails(entryDiv) {
+    entryDiv.classList.toggle('open');
+}
+
 // Attach the submit event handler to the form
 document.getElementById('ideaForm').addEventListener('submit', submitIdea);
 
@@ -132,3 +168,6 @@ window.vote = vote;
 
 // Load ideas when the page is ready
 window.onload = loadIdeas;
+
+// Load leaderboard when the page is ready
+window.onload = loadLeaderboard;
