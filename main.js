@@ -136,12 +136,14 @@ async function loadLeaderboard() {
             entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
 
             entryDiv.innerHTML = `
-                <span class="rank">${index + 1}</span> <!-- You can even hardcode "1", "2", "3" here -->
+                <span class="rank">${index === 0 ? '1' : index === 1 ? '2' : '3'}</span>
                 <span class="idea-title">${ideaSnippet}</span>
                 <div class="idea-details">
                     <p>${ideaData.content}</p>
                 </div>
             `;
+
+
             leaderboardContainer.appendChild(entryDiv);
         });
 
