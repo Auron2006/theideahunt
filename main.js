@@ -122,5 +122,8 @@ async function submitIdea(event) {
 // Attach the submit event handler to the form
 document.getElementById('ideaForm').addEventListener('submit', submitIdea);
 
+// Expose the vote function to the global scope
+window.vote = vote;
+
 // Load ideas when the page is ready
 window.onload = loadIdeas;
