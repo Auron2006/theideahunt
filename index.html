@@ -93,6 +93,16 @@
         <div class="idea" id="idea2" onclick="vote('idea2')">
             <p>Idea 2 will go here...</p>
         </div>
+        <div id="idea-submission">
+            <h2>Submit a New Idea</h2>
+            <form id="ideaForm" onsubmit="submitIdea(event)">
+                <textarea id="newIdea" rows="4" cols="50" placeholder="Enter your idea here..."></textarea>
+                <br>
+                <button type="submit">Submit Idea</button>
+            </form>
+        </div>
+        
+
     </div>
     <script>
     let ideas = [];
@@ -143,5 +153,40 @@
     window.onload = loadIdeas;
 
     </script>
+
+    <script>
+        function submitIdea(event) {
+            event.preventDefault(); // Prevent the form from reloading the page
+
+            const newIdeaContent = document.getElementById('newIdea').value.trim();
+            if (newIdeaContent) {
+                const newIdea = {
+                    content: newIdeaContent,
+                    rating: 1200 // Starting rating or whatever default you prefer
+                };
+
+                fetch('/api/add-idea', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newIdea)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    document.getElementById('newIdea').value = ''; // Clear the input field
+                    // Optionally, refresh the ideas list here if needed
+                })
+                .catch(error => {
+                    console.error('Error adding idea:', error);
+                    alert('There was an error submitting your idea.');
+                });
+            } else {
+                alert('Please enter an idea before submitting.');
+            }
+        }
+    </script>
+
 </body>
 </html>
