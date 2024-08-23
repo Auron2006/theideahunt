@@ -16,7 +16,6 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            flex-direction: column;
             background-color: #f7f9f9; /* Twitter-like light background */
         }
 
@@ -33,15 +32,23 @@
             }
         }
 
-        /* Container Styles */
-        .container {
+        /* Main content container */
+        .main-content {
             display: flex;
-            gap: 20px;
-            padding: 20px;
-            flex-wrap: wrap;
-            max-width: 800px;
+            justify-content: space-between;
+            align-items: flex-start;
             width: 100%;
-            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Ideas container */
+        .ideas-container {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         /* Idea Card Styles */
@@ -70,15 +77,71 @@
             color: #0f1419;
         }
 
+        /* Leaderboard container */
+        #leaderboard {
+            flex: 1;
+            margin-left: 20px;
+            background-color: #15202b; /* Dark mode background */
+            border-radius: 8px;
+            color: white;
+            padding: 20px;
+        }
+
+        .leaderboard-entry {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background-color: #192734; /* Entry background */
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+
+        .leaderboard-entry:hover {
+            background-color: #1d2d40; /* Hover effect */
+        }
+
+        .leaderboard-entry .rank {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .leaderboard-entry .idea-title {
+            font-size: 18px;
+            margin-right: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .leaderboard-entry .rating {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 14px;
+            color: #aab8c2;
+        }
+
+        .idea-details {
+            display: none;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #d1d1d1;
+        }
+
+        .leaderboard-entry.open .idea-details {
+            display: block;
+        }
+
         /* Responsive Design */
         @media (max-width: 600px) {
-            .container {
+            .main-content {
                 flex-direction: column;
                 align-items: center;
                 padding: 10px;
             }
 
-            .idea {
+            .idea, #leaderboard {
                 width: 100%;
                 max-width: 100%;
             }
@@ -86,20 +149,50 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="idea" id="idea1" onclick="vote('idea1')">
-            <p>Idea 1 will go here...</p>
+    <div class="main-content">
+        <div class="ideas-container">
+            <div class="idea" id="idea1" onclick="vote('idea1')">
+                <p>Idea 1 will go here...</p>
+            </div>
+            <div class="idea" id="idea2" onclick="vote('idea2')">
+                <p>Idea 2 will go here...</p>
+            </div>
+            <div id="idea-submission">
+                <h2>Submit a New Idea</h2>
+                <form id="ideaForm">
+                    <textarea id="newIdea" rows="4" cols="50" placeholder="Enter your idea here..."></textarea>
+                    <br>
+                    <button type="submit">Submit Idea</button>
+                </form>
+            </div>
         </div>
-        <div class="idea" id="idea2" onclick="vote('idea2')">
-            <p>Idea 2 will go here...</p>
-        </div>
-        <div id="idea-submission">
-            <h2>Submit a New Idea</h2>
-            <form id="ideaForm">
-                <textarea id="newIdea" rows="4" cols="50" placeholder="Enter your idea here..."></textarea>
-                <br>
-                <button type="submit">Submit Idea</button>
-            </form>
+        <div id="leaderboard">
+            <div class="leaderboard-entry" onclick="toggleIdeaDetails(this)">
+                <span class="rank">1</span>
+                <span class="idea-title">Idea 1 snippet...</span>
+                <span class="rating">Rating: 1500</span>
+                <div class="idea-details">
+                    <p>Full idea content for Idea 1...</p>
+                </div>
+            </div>
+        
+            <div class="leaderboard-entry" onclick="toggleIdeaDetails(this)">
+                <span class="rank">2</span>
+                <span class="idea-title">Idea 2 snippet...</span>
+                <span class="rating">Rating: 1480</span>
+                <div class="idea-details">
+                    <p>Full idea content for Idea 2...</p>
+                </div>
+            </div>
+        
+            <div class="leaderboard-entry" onclick="toggleIdeaDetails(this)">
+                <span class="rank">3</span>
+                <span class="idea-title">Idea 3 snippet...</span>
+                <span class="rating">Rating: 1460</span>
+                <div class="idea-details">
+                    <p>Full idea content for Idea 3...</p>
+                </div>
+            </div>
         </div>
     </div>
 

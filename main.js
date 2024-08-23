@@ -51,6 +51,11 @@ function displayIdeas() {
     }
 }
 
+function toggleIdeaDetails(element) {
+    element.classList.toggle('open');
+}
+
+
 function calculateElo(currentRating, opponentRating, actualScore, kFactor = 32) {
     const expectedScore = 1 / (1 + Math.pow(10, (opponentRating - currentRating) / 400));
     return currentRating + kFactor * (actualScore - expectedScore);
