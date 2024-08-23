@@ -101,59 +101,74 @@
                 <button type="submit">Submit Idea</button>
             </form>
         </div>
-        
-
     </div>
-    <script>
-    let ideas = [];
-    let currentIndex1 = 0;
-    let currentIndex2 = 1;
 
-    async function loadIdeas() {
-        try {
-            const response = await fetch('ideaslist.json');
-            const data = await response.json();
-            ideas = data.ideas;  // Access the ideas array within the loaded object
-            console.log('Ideas loaded:', ideas);
+    <!-- Firebase Integration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAnL2LJhni_OwLEo8avKhGRv6AqEdRsZh0",
+            authDomain: "theideahunt-74cd8.firebaseapp.com",
+            projectId: "theideahunt-74cd8",
+            storageBucket: "theideahunt-74cd8.appspot.com",
+            messagingSenderId: "302655072510",
+            appId: "1:302655072510:web:b66f02fe0862dbeae89daf",
+            measurementId: "G-VW3BXP51Y1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadIdeas() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "ideas"));
+                ideas = [];
+                querySnapshot.forEach((doc) => {
+                    ideas.push(doc.data());
+                });
+                console.log('Ideas loaded:', ideas);
+                displayIdeas();
+            } catch (error) {
+                console.error('Error loading ideas:', error);
+            }
+        }
+
+        function getRandomIndex(excludeIndex) {
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * ideas.length);
+            } while (randomIndex === excludeIndex);
+            return randomIndex;
+        }
+
+        function displayIdeas() {
+            if (ideas.length > 1) {
+                currentIndex1 = getRandomIndex(null);
+                currentIndex2 = getRandomIndex(currentIndex1);
+                document.getElementById('idea1').querySelector('p').textContent = ideas[currentIndex1].content;
+                document.getElementById('idea2').querySelector('p').textContent = ideas[currentIndex2].content;
+            } else {
+                console.error('Not enough ideas to display.');
+            }
+        }
+
+        function vote(chosenIdea) {
+            if (chosenIdea === 'idea1') {
+                currentIndex2 = getRandomIndex(currentIndex1);
+            } else {
+                currentIndex1 = getRandomIndex(currentIndex2);
+            }
             displayIdeas();
-        } catch (error) {
-            console.error('Error loading ideas:', error);
         }
-    }
 
-    function getRandomIndex(excludeIndex) {
-        let randomIndex;
-        do {
-            randomIndex = Math.floor(Math.random() * ideas.length);
-        } while (randomIndex === excludeIndex);
-        return randomIndex;
-    }
-
-    function displayIdeas() {
-        if (ideas.length > 1) {
-            currentIndex1 = getRandomIndex(null);
-            currentIndex2 = getRandomIndex(currentIndex1);
-            document.getElementById('idea1').querySelector('p').textContent = ideas[currentIndex1].content;
-            document.getElementById('idea2').querySelector('p').textContent = ideas[currentIndex2].content;
-        } else {
-            console.error('Not enough ideas to display.');
-        }
-    }
-
-    function vote(chosenIdea) {
-        if (chosenIdea === 'idea1') {
-            currentIndex2 = getRandomIndex(currentIndex1);
-        } else {
-            currentIndex1 = getRandomIndex(currentIndex2);
-        }
-        displayIdeas();
-    }
-
-    // Load ideas when the page is ready
-    window.onload = loadIdeas;
+        // Load ideas when the page is ready
+        window.onload = loadIdeas;
 
     </script>
 
+    <!-- Submit Idea Script -->
     <script>
         function submitIdea(event) {
             event.preventDefault(); // Prevent the form from reloading the page
