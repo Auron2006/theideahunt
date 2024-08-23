@@ -125,10 +125,20 @@ async function loadLeaderboard() {
         const querySnapshot = await getDocs(q);
         
         const leaderboardContainer = document.getElementById('leaderboard');
+        if (!leaderboardContainer) {
+            console.error('Leaderboard container not found');
+            return;
+        }
+
         leaderboardContainer.innerHTML = '';  // Clear existing leaderboard
 
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach((doc, index) => {
             const ideaData = doc.data();
+            if (!ideaData.content) {
+                console.error(`Idea ${index + 1} has no content`);
+                return;
+            }
+
             const ideaSnippet = ideaData.content.length > 20 ? ideaData.content.substring(0, 20) + '...' : ideaData.content;
             
             const entryDiv = document.createElement('div');
@@ -141,6 +151,7 @@ async function loadLeaderboard() {
                     <p>${ideaData.content}</p>
                 </div>
             `;
+
             leaderboardContainer.appendChild(entryDiv);
         });
 
@@ -148,6 +159,7 @@ async function loadLeaderboard() {
         console.error('Error loading leaderboard:', error);
     }
 }
+
 
 // Function to toggle the display of full idea details
 function toggleIdeaDetails(entryDiv) {
