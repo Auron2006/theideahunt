@@ -127,7 +127,7 @@ async function loadLeaderboard() {
         const leaderboardContainer = document.getElementById('leaderboard');
         leaderboardContainer.innerHTML = '';  // Clear existing leaderboard
 
-        querySnapshot.forEach((doc, index) => {
+        querySnapshot.forEach((doc) => {
             const ideaData = doc.data();
             const ideaSnippet = ideaData.content.length > 20 ? ideaData.content.substring(0, 20) + '...' : ideaData.content;
             
@@ -136,14 +136,11 @@ async function loadLeaderboard() {
             entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
 
             entryDiv.innerHTML = `
-                <span class="rank">${index === 0 ? '1' : index === 1 ? '2' : '3'}</span>
                 <span class="idea-title">${ideaSnippet}</span>
                 <div class="idea-details">
                     <p>${ideaData.content}</p>
                 </div>
             `;
-
-
             leaderboardContainer.appendChild(entryDiv);
         });
 
@@ -151,8 +148,6 @@ async function loadLeaderboard() {
         console.error('Error loading leaderboard:', error);
     }
 }
-
-
 
 // Function to toggle the display of full idea details
 function toggleIdeaDetails(entryDiv) {
@@ -170,4 +165,3 @@ window.onload = () => {
     loadIdeas();
     loadLeaderboard();
 };
-
