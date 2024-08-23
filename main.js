@@ -130,6 +130,7 @@ async function loadLeaderboard() {
         querySnapshot.forEach((doc, index) => {
             const ideaData = doc.data();
             const ideaSnippet = ideaData.content.length > 20 ? ideaData.content.substring(0, 20) + '...' : ideaData.content;
+            const ideaRating = parseInt(ideaData.rating, 10); // Ensure the rating is a number
             
             const entryDiv = document.createElement('div');
             entryDiv.className = 'leaderboard-entry';
@@ -138,6 +139,8 @@ async function loadLeaderboard() {
             entryDiv.innerHTML = `
                 <span class="rank">${index + 1}</span>
                 <span class="idea-title">${ideaSnippet}</span>
+                <!-- If you want to display the rating, you can add the line back -->
+                <!-- <span class="rating">${ideaRating}</span> -->
                 <div class="idea-details">
                     <p>${ideaData.content}</p>
                 </div>
@@ -149,6 +152,7 @@ async function loadLeaderboard() {
         console.error('Error loading leaderboard:', error);
     }
 }
+
 
 // Function to toggle the display of full idea details
 function toggleIdeaDetails(entryDiv) {
