@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, orderBy, limit, query } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAnL2LJhni_OwLEo8avKhGRv6AqEdRsZh0",
@@ -50,11 +50,6 @@ function displayIdeas() {
         console.error('Not enough ideas to display.');
     }
 }
-
-function toggleIdeaDetails(element) {
-    element.classList.toggle('open');
-}
-
 
 function calculateElo(currentRating, opponentRating, actualScore, kFactor = 32) {
     const expectedScore = 1 / (1 + Math.pow(10, (opponentRating - currentRating) / 400));
