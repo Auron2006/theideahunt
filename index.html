@@ -121,6 +121,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        let ideas = [];
+
         async function loadIdeas() {
             try {
                 const querySnapshot = await getDocs(collection(db, "ideas"));
