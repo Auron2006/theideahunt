@@ -173,39 +173,33 @@
     </script>
 
     <!-- Submit Idea Script -->
-    <script>
-        function submitIdea(event) {
+    <script type="module">
+        async function submitIdea(event) {
             event.preventDefault(); // Prevent the form from reloading the page
-
+    
             const newIdeaContent = document.getElementById('newIdea').value.trim();
             if (newIdeaContent) {
-                const newIdea = {
-                    content: newIdeaContent,
-                    rating: 1200 // Starting rating or whatever default you prefer
-                };
-
-                fetch('/api/add-idea', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(newIdea)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message);
+                try {
+                    // Add a new document with a generated ID
+                    await addDoc(collection(db, "ideas"), {
+                        content: newIdeaContent,
+                        rating: 1200 // Default rating for new ideas
+                    });
+                    alert("Idea added successfully!");
                     document.getElementById('newIdea').value = ''; // Clear the input field
                     // Optionally, refresh the ideas list here if needed
-                })
-                .catch(error => {
-                    console.error('Error adding idea:', error);
-                    alert('There was an error submitting your idea.');
-                });
+                } catch (e) {
+                    console.error("Error adding document: ", e);
+                    alert("There was an error submitting your idea.");
+                }
             } else {
                 alert('Please enter an idea before submitting.');
             }
         }
+    
+        document.getElementById('ideaForm').addEventListener('submit', submitIdea);
     </script>
+    
 
 </body>
 </html>
