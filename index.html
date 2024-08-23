@@ -157,26 +157,28 @@
 </head>
 <body>
     <div class="main-content">
-        <div class="ideas-header">
-            <h2 style="text-align: center; margin-bottom: 20px;">Vote for the better idea!</h2>
+        <div class="ideas-section">
+            <div class="ideas-header">
+                <h2 style="text-align: center; margin-bottom: 20px;">Vote for the better idea!</h2>
+            </div>
+            <div class="ideas-container">
+                <div class="idea" id="idea1" onclick="vote('idea1')">
+                    <p>Idea 1 will go here...</p>
+                </div>
+                <div class="idea" id="idea2" onclick="vote('idea2')">
+                    <p>Idea 2 will go here...</p>
+                </div>
+                <div id="idea-submission">
+                    <h2>Submit a New Idea</h2>
+                    <form id="ideaForm">
+                        <textarea id="newIdea" rows="4" cols="50" placeholder="Enter your idea here..."></textarea>
+                        <br>
+                        <button type="submit">Submit Idea</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="ideas-container">
-            <div class="idea" id="idea1" onclick="vote('idea1')">
-                <p>Idea 1 will go here...</p>
-            </div>
-            <div class="idea" id="idea2" onclick="vote('idea2')">
-                <p>Idea 2 will go here...</p>
-            </div>
-            <div id="idea-submission">
-                <h2>Submit a New Idea</h2>
-                <form id="ideaForm">
-                    <textarea id="newIdea" rows="4" cols="50" placeholder="Enter your idea here..."></textarea>
-                    <br>
-                    <button type="submit">Submit Idea</button>
-                </form>
-            </div>
-        </div>
-    
+        
         <div id="leaderboard">
             <div class="leaderboard-header">
                 Leaderboard
