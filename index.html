@@ -95,7 +95,7 @@
         </div>
         <div id="idea-submission">
             <h2>Submit a New Idea</h2>
-            <form id="ideaForm" onsubmit="submitIdea(event)">
+            <form id="ideaForm">
                 <textarea id="newIdea" rows="4" cols="50" placeholder="Enter your idea here..."></textarea>
                 <br>
                 <button type="submit">Submit Idea</button>
@@ -103,7 +103,7 @@
         </div>
     </div>
 
-    <!-- Firebase Integration -->
+    <!-- Firebase Integration and Application Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
         import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore.js";
@@ -170,13 +170,10 @@
         // Load ideas when the page is ready
         window.onload = loadIdeas;
 
-    </script>
-
-    <!-- Submit Idea Script -->
-    <script type="module">
+        // Function to handle idea submission
         async function submitIdea(event) {
             event.preventDefault(); // Prevent the form from reloading the page
-    
+
             const newIdeaContent = document.getElementById('newIdea').value.trim();
             if (newIdeaContent) {
                 try {
@@ -196,10 +193,10 @@
                 alert('Please enter an idea before submitting.');
             }
         }
-    
-        document.getElementById('ideaForm').addEventListener('submit', submitIdea);
-    </script>
-    
 
+        // Attach the submit event handler to the form
+        document.getElementById('ideaForm').addEventListener('submit', submitIdea);
+
+    </script>
 </body>
 </html>
