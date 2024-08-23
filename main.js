@@ -161,8 +161,9 @@ document.getElementById('ideaForm').addEventListener('submit', submitIdea);
 // Expose the vote function to the global scope
 window.vote = vote;
 
-// Load ideas when the page is ready
-window.onload = loadIdeas;
+// Ensure both loadIdeas and loadLeaderboard are called when the page loads
+window.onload = () => {
+    loadIdeas();
+    loadLeaderboard();
+};
 
-// Load leaderboard when the page is ready
-window.onload = loadLeaderboard;
