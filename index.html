@@ -157,10 +157,10 @@
 </head>
 <body>
     <div class="main-content">
+        <div class="ideas-header">
+            <h2 style="text-align: center; margin-bottom: 20px;">Vote for the better idea!</h2>
+        </div>
         <div class="ideas-container">
-            <div class="ideas-header">
-                <h2>Vote for the better idea!</h2>
-            </div>
             <div class="idea" id="idea1" onclick="vote('idea1')">
                 <p>Idea 1 will go here...</p>
             </div>
@@ -176,34 +176,17 @@
                 </form>
             </div>
         </div>
+    
         <div id="leaderboard">
             <div class="leaderboard-header">
                 Leaderboard
             </div>
-            <div class="leaderboard-entry" onclick="toggleIdeaDetails(this)">
-                <span class="rank">1</span>
-                <span class="idea-title">Idea 1 snippet...</span>
-                <div class="idea-details">
-                    <p>Full idea content for Idea 1...</p>
-                </div>
-            </div>
-            <div class="leaderboard-entry" onclick="toggleIdeaDetails(this)">
-                <span class="rank">2</span>
-                <span class="idea-title">Idea 2 snippet...</span>
-                <div class="idea-details">
-                    <p>Full idea content for Idea 2...</p>
-                </div>
-            </div>
-            <div class="leaderboard-entry" onclick="toggleIdeaDetails(this)">
-                <span class="rank">3</span>
-                <span class="idea-title">Idea 3 snippet...</span>
-                <div class="idea-details">
-                    <p>Full idea content for Idea 3...</p>
-                </div>
+            <div id="leaderboard-entries">
+                <!-- Entries will be populated here by JavaScript -->
             </div>
         </div>
     </div>
-
+    
     <!-- Link to the external JavaScript file -->
     <script src="main.js" type="module"></script>
 </body>
