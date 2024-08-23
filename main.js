@@ -136,6 +136,9 @@ async function loadLeaderboard() {
             entryDiv.className = 'leaderboard-entry';
             entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
 
+            // Ensure rank is correctly calculated and displayed
+            const rank = index + 1; // This should simply be 1, 2, 3, etc.
+
             entryDiv.innerHTML = `
                 <span class="rank">${index + 1}</span>
                 <span class="idea-title">${ideaSnippet}</span>
