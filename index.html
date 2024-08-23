@@ -122,6 +122,8 @@
         const db = getFirestore(app);
 
         let ideas = [];
+        let currentIndex1 = 0;
+        let currentIndex2 = 1;
 
         async function loadIdeas() {
             try {
