@@ -128,8 +128,9 @@ async function submitIdea(event) {
 
 async function loadLeaderboard() {
     try {
-
+        // Reset showAll to false each time the leaderboard is loaded
         showAll = false;
+        
         const q = query(collection(db, "ideas"), orderBy("rating", "desc"), limit(10));
         const querySnapshot = await getDocs(q);
         
@@ -142,12 +143,10 @@ async function loadLeaderboard() {
             
             const entryDiv = document.createElement('div');
             entryDiv.className = 'leaderboard-entry';
-            entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
-
-            // Only show the top 3 initially
             if (index >= 3) {
-                entryDiv.style.display = 'none';
+                entryDiv.style.display = 'none';  // Hide entries beyond the top 3
             }
+            entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
 
             entryDiv.innerHTML = `
                 <span class="idea-title">${ideaSnippet}</span>
@@ -157,19 +156,12 @@ async function loadLeaderboard() {
             `;
             leaderboardContainer.appendChild(entryDiv);
         });
+
+        // Reset the button text
         document.getElementById('toggleLeaderboardButton').textContent = 'Show More';
 
     } catch (error) {
         console.error('Error loading leaderboard:', error);
-    }
-}
-
-function toggleIdeaDetails(entryDiv) {
-    const detailsDiv = entryDiv.querySelector('.idea-details');
-    if (detailsDiv.style.display === 'none') {
-        detailsDiv.style.display = 'block';
-    } else {
-        detailsDiv.style.display = 'none';
     }
 }
 
@@ -185,6 +177,17 @@ function toggleLeaderboard() {
 
     document.getElementById('toggleLeaderboardButton').textContent = showAll ? 'Show Less' : 'Show More';
 }
+
+
+function toggleIdeaDetails(entryDiv) {
+    const detailsDiv = entryDiv.querySelector('.idea-details');
+    if (detailsDiv.style.display === 'none') {
+        detailsDiv.style.display = 'block';
+    } else {
+        detailsDiv.style.display = 'none';
+    }
+}
+
 
 // Expose the vote, skip, and toggleLeaderboard functions to the global scope
 window.vote = vote;
