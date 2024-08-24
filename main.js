@@ -167,8 +167,9 @@ function toggleIdeaDetails(entryDiv) {
 // Attach the submit event handler to the form
 document.getElementById('ideaForm').addEventListener('submit', submitIdea);
 
-// Expose the vote function to the global scope
+// Expose the vote and skip function to the global scope
 window.vote = vote;
+window.skipIdea = skipIdea;
 
 // Ensure both loadIdeas and loadLeaderboard are called when the page loads
 window.onload = () => {
