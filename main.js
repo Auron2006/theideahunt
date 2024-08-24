@@ -56,6 +56,14 @@ function calculateElo(currentRating, opponentRating, actualScore, kFactor = 32) 
     return currentRating + kFactor * (actualScore - expectedScore);
 }
 
+// New function to handle the Skip action
+function skipIdea() {
+    currentIndex1 = getRandomIndex(currentIndex2);
+    currentIndex2 = getRandomIndex(currentIndex1);
+    displayIdeas();
+}
+
+
 async function vote(chosenIdea) {
     let winnerIndex, loserIndex;
 
