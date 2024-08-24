@@ -145,7 +145,7 @@ async function loadLeaderboard() {
             entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
 
             // Only show the top 3 initially
-            if (!showAll && index >= 3) {
+            if (index >= 3) {
                 entryDiv.style.display = 'none';
             }
 
@@ -157,6 +157,7 @@ async function loadLeaderboard() {
             `;
             leaderboardContainer.appendChild(entryDiv);
         });
+        document.getElementById('toggleLeaderboardButton').textContent = 'Show More';
 
     } catch (error) {
         console.error('Error loading leaderboard:', error);
