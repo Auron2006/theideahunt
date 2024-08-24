@@ -17,7 +17,7 @@ const db = getFirestore(app);
 let ideas = [];
 let currentIndex1 = 0;
 let currentIndex2 = 1;
-let showingAll = false; // To track whether all entries are being shown
+let showAll = false;  // Corrected variable name for consistency
 
 async function loadIdeas() {
     try {
@@ -64,7 +64,6 @@ function skipIdea() {
     displayIdeas();
 }
 
-
 async function vote(chosenIdea) {
     let winnerIndex, loserIndex;
 
@@ -104,7 +103,6 @@ async function vote(chosenIdea) {
     displayIdeas();
 }
 
-// Function to handle idea submission
 async function submitIdea(event) {
     event.preventDefault(); // Prevent the form from reloading the page
 
@@ -142,8 +140,12 @@ async function loadLeaderboard() {
             
             const entryDiv = document.createElement('div');
             entryDiv.className = 'leaderboard-entry';
-            entryDiv.style.display = index < 3 ? 'block' : 'none'; // Show only top 3 by default
             entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
+
+            // Only show the top 3 initially
+            if (!showAll && index >= 3) {
+                entryDiv.style.display = 'none';
+            }
 
             entryDiv.innerHTML = `
                 <span class="rank">${index + 1}</span>
@@ -161,27 +163,17 @@ async function loadLeaderboard() {
 }
 
 function toggleLeaderboard() {
-    const entries = document.querySelectorAll('.leaderboard-entry');
-    const expandButton = document.getElementById('expandButton');
-
-    showingAll = !showingAll;
+    showAll = !showAll;
+    const entries = document.querySelectorAll('#leaderboard-entries .leaderboard-entry');
+    
     entries.forEach((entry, index) => {
         if (index >= 3) {
-            entry.style.display = showingAll ? 'block' : 'none';
+            entry.style.display = showAll ? 'block' : 'none';
         }
     });
-    expandButton.textContent = showingAll ? 'Show Less' : 'Show More';
+
+    document.getElementById('toggleLeaderboardButton').textContent = showAll ? 'Show Less' : 'Show More';
 }
-
-
-
-// Function to toggle the display of full idea details
-function toggleIdeaDetails(entryDiv) {
-    entryDiv.classList.toggle('open');
-}
-
-// Attach the submit event handler to the form
-document.getElementById('ideaForm').addEventListener('submit', submitIdea);
 
 // Expose the vote and skip function to the global scope
 window.vote = vote;
