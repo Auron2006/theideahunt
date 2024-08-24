@@ -81,22 +81,29 @@
             color: #0f1419;
         }
 
-        /* Leaderboard container */
+        /* Leaderboard styles */
         #leaderboard {
-            background-color: #15202b;
-            border-radius: 8px;
-            color: white;
-            padding: 20px;
-            margin-top: 20px;
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            max-height: 30vh; /* Make the leaderboard shorter */
-            overflow-y: auto; /* Allow scrolling within the leaderboard */
+            max-height: 50px; /* Initial small height */
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
             z-index: 1000;
             border-radius: 16px 16px 0 0;
             box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Expanded leaderboard styles */
+        #leaderboard.expanded {
+            max-height: 100vh; /* Full screen height when expanded */
+            overflow-y: auto;
+        }
+
+        /* Leaderboard title clickable cursor */
+        .leaderboard-header {
+            cursor: pointer;
         }
 
         /* Leaderboard header */
@@ -257,7 +264,7 @@
             <div id="leaderboard-entries">
                 <!-- Entries will be populated here by JavaScript -->
             </div>
-            <button id="toggleLeaderboardButton" onclick="toggleLeaderboard()">Show More</button>
+            <!--<button id="toggleLeaderboardButton" onclick="toggleLeaderboard()">Show More</button> -->
         </div>
     </div>
     

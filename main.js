@@ -165,20 +165,6 @@ async function loadLeaderboard() {
     }
 }
 
-function toggleLeaderboard() {
-    showAll = !showAll;
-    const entries = document.querySelectorAll('#leaderboard-entries .leaderboard-entry');
-    
-    entries.forEach((entry, index) => {
-        if (index >= 3) {
-            entry.style.display = showAll ? 'block' : 'none';
-        }
-    });
-
-    document.getElementById('toggleLeaderboardButton').textContent = showAll ? 'Show Less' : 'Show More';
-}
-
-
 function toggleIdeaDetails(entryDiv) {
     const detailsDiv = entryDiv.querySelector('.idea-details');
     if (detailsDiv.style.display === 'none') {
@@ -188,14 +174,30 @@ function toggleIdeaDetails(entryDiv) {
     }
 }
 
+// Function to toggle the leaderboard's expanded state
+function toggleLeaderboardExpanded() {
+    const leaderboard = document.getElementById('leaderboard');
+    leaderboard.classList.toggle('expanded');
+}
 
+// Function to handle scroll and collapse the leaderboard
+function handleScroll() {
+    const leaderboard = document.getElementById('leaderboard');
+    const threshold = 100; // Adjust this value based on when you want it to collapse
+
+    if (window.scrollY <= threshold) {
+        leaderboard.classList.remove('expanded');
+    }
+}
 // Expose the vote, skip, and toggleLeaderboard functions to the global scope
 window.vote = vote;
 window.skipIdea = skipIdea;
-window.toggleLeaderboard = toggleLeaderboard;
+window.toggleLeaderboardExpanded = toggleLeaderboardExpanded;
+window.addEventListener('scroll', handleScroll);
 
 // Ensure both loadIdeas and loadLeaderboard are called when the page loads
 window.onload = () => {
     loadIdeas();
     loadLeaderboard();
+    document.querySelector('.leaderboard-header').addEventListener('click', toggleLeaderboardExpanded);
 };
