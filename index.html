@@ -129,6 +129,18 @@
             text-overflow: ellipsis;
         }
 
+        #expandButton {
+            background-color: #1da1f2;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            transition: background-color 0.3s;
+        }
+
+        #expandButton:hover {
+            background-color: #0d8ce0;
+        }
+
         .idea-details {
             display: none;
             margin-top: 10px;
@@ -188,6 +200,7 @@
             <div id="leaderboard-entries">
                 <!-- Entries will be populated here by JavaScript -->
             </div>
+            <button id="expandButton" onclick="toggleLeaderboard()" style="display: block; margin: 10px auto; padding: 10px; cursor: pointer;">Show More</button>
         </div>
     </div>
     

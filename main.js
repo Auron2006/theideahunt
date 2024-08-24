@@ -17,6 +17,7 @@ const db = getFirestore(app);
 let ideas = [];
 let currentIndex1 = 0;
 let currentIndex2 = 1;
+let showingAll = false; // To track whether all entries are being shown
 
 async function loadIdeas() {
     try {
@@ -129,21 +130,23 @@ async function submitIdea(event) {
 
 async function loadLeaderboard() {
     try {
-        const q = query(collection(db, "ideas"), orderBy("rating", "desc"), limit(3));
+        const q = query(collection(db, "ideas"), orderBy("rating", "desc"), limit(10));
         const querySnapshot = await getDocs(q);
-
+        
         const leaderboardContainer = document.getElementById('leaderboard-entries');
         leaderboardContainer.innerHTML = '';  // Clear existing leaderboard
 
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach((doc, index) => {
             const ideaData = doc.data();
             const ideaSnippet = ideaData.content.length > 20 ? ideaData.content.substring(0, 20) + '...' : ideaData.content;
-
+            
             const entryDiv = document.createElement('div');
             entryDiv.className = 'leaderboard-entry';
+            entryDiv.style.display = index < 3 ? 'block' : 'none'; // Show only top 3 by default
             entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
 
             entryDiv.innerHTML = `
+                <span class="rank">${index + 1}</span>
                 <span class="idea-title">${ideaSnippet}</span>
                 <div class="idea-details">
                     <p>${ideaData.content}</p>
@@ -155,6 +158,19 @@ async function loadLeaderboard() {
     } catch (error) {
         console.error('Error loading leaderboard:', error);
     }
+}
+
+function toggleLeaderboard() {
+    const entries = document.querySelectorAll('.leaderboard-entry');
+    const expandButton = document.getElementById('expandButton');
+
+    showingAll = !showingAll;
+    entries.forEach((entry, index) => {
+        if (index >= 3) {
+            entry.style.display = showingAll ? 'block' : 'none';
+        }
+    });
+    expandButton.textContent = showingAll ? 'Show Less' : 'Show More';
 }
 
 
