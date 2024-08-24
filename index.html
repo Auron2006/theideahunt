@@ -53,7 +53,7 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            margin-bottom: 60vh; /* Adjust based on leaderboard height */
+            margin-bottom: 60vh;
         }
 
         /* Idea Card Styles */
@@ -81,39 +81,38 @@
             color: #0f1419;
         }
 
-        /* Leaderboard styles */
+        /* Leaderboard container */
         #leaderboard {
+            background-color: #15202b;
+            border-radius: 8px;
+            color: white;
+            padding: 20px;
+            margin-top: 20px;
+            height: 50px; /* Initial height */
+            overflow: hidden;
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            max-height: 50px; /* Initial small height */
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out;
-            z-index: 1000;
-            border-radius: 16px 16px 0 0;
-            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+            transition: height 0.3s ease-in-out; /* Smooth transition */
+            z-index: 1000; /* Ensure it's above other elements */
         }
 
-        /* Expanded leaderboard styles */
+        /* Expanded state for the leaderboard */
         #leaderboard.expanded {
-            max-height: 100vh; /* Full screen height when expanded */
+            height: 100vh; /* Full height when expanded */
             overflow-y: auto;
         }
 
-        /* Leaderboard title clickable cursor */
+        /* Leaderboard header - clickable */
         .leaderboard-header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
             cursor: pointer;
         }
 
-        /* Leaderboard header */
-        .leaderboard-header {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
+        /* Leaderboard entries */
         .leaderboard-entry {
             padding: 10px;
             margin: 10px 0;
@@ -122,50 +121,19 @@
             cursor: pointer;
             position: relative;
             transition: background-color 0.3s;
+            display: none; /* Hidden by default */
         }
 
+        /* Hover effect for leaderboard entries */
         .leaderboard-entry:hover {
             background-color: #1d2d40;
         }
 
-        .leaderboard-entry .rank {
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .leaderboard-entry .idea-title {
-            font-size: 18px;
-            margin-right: 10px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        #toggleLeaderboardButton {
-            background-color: #1da1f2;
-            color: white;
-            border: none;
-            border-radius: 16px;
-            padding: 10px 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin: 10px auto;
-            display: block;
-        }
-
-        #toggleLeaderboardButton:hover {
-            background-color: #0d8ce0;
-        }
-
-        .idea-details {
+        .leaderboard-entry .idea-details {
             display: none;
             margin-top: 10px;
             font-size: 14px;
             color: #d1d1d1;
-        }
-
-        .leaderboard-entry.open .idea-details {
-            display: block;
         }
 
         /* New styles for the skip button and idea submission */
@@ -220,7 +188,7 @@
                 bottom: 0;
                 left: 0;
                 right: 0;
-                max-height: 50vh;
+                max-height: 25vh;
                 overflow-y: auto;
                 z-index: 1000;
                 border-radius: 16px 16px 0 0;
@@ -264,7 +232,6 @@
             <div id="leaderboard-entries">
                 <!-- Entries will be populated here by JavaScript -->
             </div>
-            <!--<button id="toggleLeaderboardButton" onclick="toggleLeaderboard()">Show More</button> -->
         </div>
     </div>
     

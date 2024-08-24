@@ -18,12 +18,13 @@ let ideas = [];
 let currentIndex1 = 0;
 let currentIndex2 = 1;
 
+// Load the ideas from the database
 async function loadIdeas() {
     try {
         const querySnapshot = await getDocs(collection(db, "ideas"));
         ideas = [];
         querySnapshot.forEach((doc) => {
-            ideas.push({...doc.data(), id: doc.id});  // Store the document ID
+            ideas.push({ ...doc.data(), id: doc.id });
         });
         console.log('Ideas loaded:', ideas);
         displayIdeas();
@@ -32,6 +33,7 @@ async function loadIdeas() {
     }
 }
 
+// Get a random index for selecting ideas to vote on
 function getRandomIndex(excludeIndex) {
     let randomIndex;
     do {
@@ -40,6 +42,7 @@ function getRandomIndex(excludeIndex) {
     return randomIndex;
 }
 
+// Display the selected ideas for voting
 function displayIdeas() {
     if (ideas.length > 1) {
         currentIndex1 = getRandomIndex(null);
@@ -51,18 +54,20 @@ function displayIdeas() {
     }
 }
 
+// Calculate the Elo rating
 function calculateElo(currentRating, opponentRating, actualScore, kFactor = 32) {
     const expectedScore = 1 / (1 + Math.pow(10, (opponentRating - currentRating) / 400));
     return currentRating + kFactor * (actualScore - expectedScore);
 }
 
-// Function to handle the Skip action
+// Handle the Skip action
 function skipIdea() {
     currentIndex1 = getRandomIndex(currentIndex2);
     currentIndex2 = getRandomIndex(currentIndex1);
     displayIdeas();
 }
 
+// Handle voting and updating ratings
 async function vote(chosenIdea) {
     let winnerIndex, loserIndex;
 
@@ -74,15 +79,12 @@ async function vote(chosenIdea) {
         loserIndex = currentIndex1;
     }
 
-    // Get current ratings
-    const winnerRating = ideas[winnerIndex].rating || 1200;  // Ensure default rating
-    const loserRating = ideas[loserIndex].rating || 1200;    // Ensure default rating
+    const winnerRating = ideas[winnerIndex].rating || 1200;
+    const loserRating = ideas[loserIndex].rating || 1200;
 
-    // Calculate new ratings
     const newWinnerRating = calculateElo(winnerRating, loserRating, 1);
     const newLoserRating = calculateElo(loserRating, winnerRating, 0);
 
-    // Update the ratings in the database
     try {
         const winnerDocRef = doc(db, "ideas", ideas[winnerIndex].id);
         const loserDocRef = doc(db, "ideas", ideas[loserIndex].id);
@@ -96,26 +98,24 @@ async function vote(chosenIdea) {
         console.error("Error updating ratings: ", error);
     }
 
-    // Get new random ideas
     currentIndex1 = getRandomIndex(loserIndex);
     currentIndex2 = getRandomIndex(currentIndex1);
     displayIdeas();
 }
 
+// Handle idea submission
 async function submitIdea(event) {
-    event.preventDefault(); // Prevent the form from reloading the page
+    event.preventDefault();
 
     const newIdeaContent = document.getElementById('newIdea').value.trim();
     if (newIdeaContent) {
         try {
-            // Add a new document with a generated ID
             await addDoc(collection(db, "ideas"), {
                 content: newIdeaContent,
-                rating: 1200 // Default rating for new ideas
+                rating: 1200
             });
             alert("Idea added successfully!");
-            document.getElementById('newIdea').value = ''; // Clear the input field
-            // Optionally, refresh the ideas list here if needed
+            document.getElementById('newIdea').value = '';
         } catch (e) {
             console.error("Error adding document: ", e);
             alert("There was an error submitting your idea.");
@@ -125,20 +125,22 @@ async function submitIdea(event) {
     }
 }
 
+// Load and display the leaderboard
 async function loadLeaderboard() {
     try {
         const q = query(collection(db, "ideas"), orderBy("rating", "desc"), limit(10));
         const querySnapshot = await getDocs(q);
-        
+
         const leaderboardContainer = document.getElementById('leaderboard-entries');
-        leaderboardContainer.innerHTML = '';  // Clear existing leaderboard
+        leaderboardContainer.innerHTML = '';
 
         querySnapshot.forEach((doc) => {
             const ideaData = doc.data();
             const ideaSnippet = ideaData.content.length > 20 ? ideaData.content.substring(0, 20) + '...' : ideaData.content;
-            
+
             const entryDiv = document.createElement('div');
             entryDiv.className = 'leaderboard-entry';
+            entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
 
             entryDiv.innerHTML = `
                 <span class="idea-title">${ideaSnippet}</span>
@@ -146,49 +148,51 @@ async function loadLeaderboard() {
                     <p>${ideaData.content}</p>
                 </div>
             `;
-            entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
             leaderboardContainer.appendChild(entryDiv);
         });
-
     } catch (error) {
         console.error('Error loading leaderboard:', error);
     }
 }
 
+// Toggle the details of each idea in the leaderboard
 function toggleIdeaDetails(entryDiv) {
     const detailsDiv = entryDiv.querySelector('.idea-details');
-    if (detailsDiv.style.display === 'none') {
-        detailsDiv.style.display = 'block';
-    } else {
-        detailsDiv.style.display = 'none';
-    }
+    detailsDiv.style.display = detailsDiv.style.display === 'none' ? 'block' : 'none';
 }
 
-// Function to toggle the leaderboard's expanded state
+// Toggle the leaderboard's expanded state
 function toggleLeaderboardExpanded() {
     const leaderboard = document.getElementById('leaderboard');
     leaderboard.classList.toggle('expanded');
 
-    // Automatically scroll to top when expanded
     if (leaderboard.classList.contains('expanded')) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.querySelectorAll('.leaderboard-entry').forEach(entry => {
+            entry.style.display = 'block';
+        });
+    } else {
+        document.querySelectorAll('.leaderboard-entry').forEach(entry => {
+            entry.style.display = 'none';
+        });
     }
 }
 
-// Function to handle scroll and collapse the leaderboard
+// Handle scroll and collapse the leaderboard
 function handleScroll() {
     const leaderboard = document.getElementById('leaderboard');
-    const threshold = 100; // Adjust this value based on when you want it to collapse
-
-    if (window.scrollY <= threshold && leaderboard.classList.contains('expanded')) {
+    if (window.scrollY <= 100 && leaderboard.classList.contains('expanded')) {
         leaderboard.classList.remove('expanded');
+        document.querySelectorAll('.leaderboard-entry').forEach(entry => {
+            entry.style.display = 'none';
+        });
     }
 }
 
 // Attach the click event to the leaderboard title
 document.querySelector('.leaderboard-header').addEventListener('click', toggleLeaderboardExpanded);
 
-// Expose the vote, skip, and toggleLeaderboardExpanded functions to the global scope
+// Expose the functions to the global scope
 window.vote = vote;
 window.skipIdea = skipIdea;
 window.toggleLeaderboardExpanded = toggleLeaderboardExpanded;
