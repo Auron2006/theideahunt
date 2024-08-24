@@ -8,25 +8,23 @@
         /* Global Styles */
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background-color: #ffffff;
+            background-color: #f7f9f9;
             color: #0f1419;
             margin: 0;
             padding: 0;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f7f9f9; /* Twitter-like light background */
+            flex-direction: column;
         }
 
         /* Dark Mode */
         @media (prefers-color-scheme: dark) {
             body {
-                background-color: #15202b; /* Twitter dark mode background */
+                background-color: #15202b;
                 color: #ffffff;
             }
             .idea {
-                background-color: #192734; /* Dark mode card background */
+                background-color: #192734;
                 border: 1px solid #38444d;
                 color: #ffffff;
             }
@@ -35,12 +33,12 @@
         /* Main content container */
         .main-content {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            flex-direction: column;
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            box-sizing: border-box;
         }
 
         /* Ideas header */
@@ -52,16 +50,15 @@
 
         /* Ideas container */
         .ideas-container {
-            flex: 3;
             display: flex;
             flex-direction: column;
             gap: 20px;
+            margin-bottom: 20px;
         }
 
         /* Idea Card Styles */
         .idea {
             width: 100%;
-            max-width: 350px;
             padding: 15px;
             background-color: #ffffff;
             border: 1px solid #e1e8ed;
@@ -86,12 +83,11 @@
 
         /* Leaderboard container */
         #leaderboard {
-            flex: 1;
-            margin-left: 20px;
-            background-color: #15202b; /* Dark mode background */
+            background-color: #15202b;
             border-radius: 8px;
             color: white;
             padding: 20px;
+            margin-top: 20px;
         }
 
         /* Leaderboard header */
@@ -106,14 +102,14 @@
             padding: 10px;
             margin: 10px 0;
             border-radius: 8px;
-            background-color: #192734; /* Entry background */
+            background-color: #192734;
             cursor: pointer;
             position: relative;
             transition: background-color 0.3s;
         }
 
         .leaderboard-entry:hover {
-            background-color: #1d2d40; /* Hover effect */
+            background-color: #1d2d40;
         }
 
         .leaderboard-entry .rank {
@@ -134,10 +130,14 @@
             color: white;
             border: none;
             border-radius: 16px;
+            padding: 10px 20px;
+            cursor: pointer;
             transition: background-color 0.3s;
+            margin: 10px auto;
+            display: block;
         }
 
-        #expandButton:hover {
+        #toggleLeaderboardButton:hover {
             background-color: #0d8ce0;
         }
 
@@ -152,17 +152,67 @@
             display: block;
         }
 
+        /* New styles for the skip button and idea submission */
+        #skipButton {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #1da1f2;
+            color: white;
+            border: none;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        #idea-submission {
+            margin-top: 20px;
+        }
+
+        #ideaForm textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e1e8ed;
+            resize: vertical;
+            margin-bottom: 10px;
+        }
+
+        #ideaForm button {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #1da1f2;
+            color: white;
+            border: none;
+            font-size: 16px;
+        }
+
         /* Responsive Design */
         @media (max-width: 600px) {
             .main-content {
-                flex-direction: column;
-                align-items: center;
                 padding: 10px;
             }
 
             .idea, #leaderboard {
                 width: 100%;
-                max-width: 100%;
+            }
+
+            #leaderboard {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                max-height: 50vh;
+                overflow-y: auto;
+                z-index: 1000;
+                border-radius: 16px 16px 0 0;
+                box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .ideas-container {
+                margin-bottom: 60vh; /* Adjust based on leaderboard height */
             }
         }
     </style>
@@ -171,7 +221,7 @@
     <div class="main-content">
         <div class="ideas-section">
             <div class="ideas-header">
-                <h2 style="text-align: center; margin-bottom: 20px;">Vote for the better idea!</h2>
+                <h2>Vote for the better idea!</h2>
             </div>
             <div class="ideas-container">
                 <div class="idea" id="idea1" onclick="vote('idea1')">
@@ -180,13 +230,11 @@
                 <div class="idea" id="idea2" onclick="vote('idea2')">
                     <p>Idea 2 will go here...</p>
                 </div>
-                <!-- New Skip Button -->
-                <button id="skipButton" style="margin-top: 20px; padding: 10px; border-radius: 8px; cursor: pointer;" onclick="skipIdea()">Skip</button>
+                <button id="skipButton" onclick="skipIdea()">Skip</button>
                 <div id="idea-submission">
                     <h2>Submit a New Idea</h2>
                     <form id="ideaForm">
-                        <textarea id="newIdea" rows="4" cols="50" placeholder="Enter your idea here..."></textarea>
-                        <br>
+                        <textarea id="newIdea" rows="4" placeholder="Enter your idea here..."></textarea>
                         <button type="submit">Submit Idea</button>
                     </form>
                 </div>
@@ -200,7 +248,7 @@
             <div id="leaderboard-entries">
                 <!-- Entries will be populated here by JavaScript -->
             </div>
-            <button id="toggleLeaderboardButton" onclick="toggleLeaderboard()" style="display: block; margin: 10px auto; padding: 10px; cursor: pointer;">Show More</button>
+            <button id="toggleLeaderboardButton" onclick="toggleLeaderboard()">Show More</button>
         </div>
     </div>
     

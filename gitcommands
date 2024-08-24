@@ -1,5 +1,5 @@
 git add .
-git commit -m "now with a leaderboard"
+git commit -m "now with a skip button and longer leaderbaord"
 git push
 
 vercel --prod 
