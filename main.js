@@ -76,8 +76,8 @@ async function vote(chosenIdea) {
     }
 
     // Get current ratings
-    const winnerRating = ideas[winnerIndex].rating;
-    const loserRating = ideas[loserIndex].rating;
+    const winnerRating = ideas[winnerIndex].rating || 1200;  // Ensure default rating
+    const loserRating = ideas[loserIndex].rating || 1200;    // Ensure default rating
 
     // Calculate new ratings
     const newWinnerRating = calculateElo(winnerRating, loserRating, 1);
@@ -148,9 +148,8 @@ async function loadLeaderboard() {
             }
 
             entryDiv.innerHTML = `
-                <span class="rank">${index + 1}</span>
                 <span class="idea-title">${ideaSnippet}</span>
-                <div class="idea-details">
+                <div class="idea-details" style="display: none;">
                     <p>${ideaData.content}</p>
                 </div>
             `;
@@ -159,6 +158,15 @@ async function loadLeaderboard() {
 
     } catch (error) {
         console.error('Error loading leaderboard:', error);
+    }
+}
+
+function toggleIdeaDetails(entryDiv) {
+    const detailsDiv = entryDiv.querySelector('.idea-details');
+    if (detailsDiv.style.display === 'none') {
+        detailsDiv.style.display = 'block';
+    } else {
+        detailsDiv.style.display = 'none';
     }
 }
 
@@ -175,7 +183,7 @@ function toggleLeaderboard() {
     document.getElementById('toggleLeaderboardButton').textContent = showAll ? 'Show Less' : 'Show More';
 }
 
-// Expose the vote and skip function to the global scope
+// Expose the vote, skip, and toggleLeaderboard functions to the global scope
 window.vote = vote;
 window.skipIdea = skipIdea;
 window.toggleLeaderboard = toggleLeaderboard;
