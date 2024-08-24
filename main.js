@@ -17,7 +17,6 @@ const db = getFirestore(app);
 let ideas = [];
 let currentIndex1 = 0;
 let currentIndex2 = 1;
-let showAll = false;  // Corrected variable name for consistency
 
 async function loadIdeas() {
     try {
@@ -57,7 +56,7 @@ function calculateElo(currentRating, opponentRating, actualScore, kFactor = 32) 
     return currentRating + kFactor * (actualScore - expectedScore);
 }
 
-// New function to handle the Skip action
+// Function to handle the Skip action
 function skipIdea() {
     currentIndex1 = getRandomIndex(currentIndex2);
     currentIndex2 = getRandomIndex(currentIndex1);
@@ -128,25 +127,18 @@ async function submitIdea(event) {
 
 async function loadLeaderboard() {
     try {
-        // Reset showAll to false each time the leaderboard is loaded
-        showAll = false;
-        
         const q = query(collection(db, "ideas"), orderBy("rating", "desc"), limit(10));
         const querySnapshot = await getDocs(q);
         
         const leaderboardContainer = document.getElementById('leaderboard-entries');
         leaderboardContainer.innerHTML = '';  // Clear existing leaderboard
 
-        querySnapshot.forEach((doc, index) => {
+        querySnapshot.forEach((doc) => {
             const ideaData = doc.data();
             const ideaSnippet = ideaData.content.length > 20 ? ideaData.content.substring(0, 20) + '...' : ideaData.content;
             
             const entryDiv = document.createElement('div');
             entryDiv.className = 'leaderboard-entry';
-            if (index >= 3) {
-                entryDiv.style.display = 'none';  // Hide entries beyond the top 3
-            }
-            entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
 
             entryDiv.innerHTML = `
                 <span class="idea-title">${ideaSnippet}</span>
@@ -154,11 +146,9 @@ async function loadLeaderboard() {
                     <p>${ideaData.content}</p>
                 </div>
             `;
+            entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
             leaderboardContainer.appendChild(entryDiv);
         });
-
-        // Reset the button text
-        document.getElementById('toggleLeaderboardButton').textContent = 'Show More';
 
     } catch (error) {
         console.error('Error loading leaderboard:', error);
@@ -178,6 +168,11 @@ function toggleIdeaDetails(entryDiv) {
 function toggleLeaderboardExpanded() {
     const leaderboard = document.getElementById('leaderboard');
     leaderboard.classList.toggle('expanded');
+
+    // Automatically scroll to top when expanded
+    if (leaderboard.classList.contains('expanded')) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 }
 
 // Function to handle scroll and collapse the leaderboard
@@ -185,11 +180,15 @@ function handleScroll() {
     const leaderboard = document.getElementById('leaderboard');
     const threshold = 100; // Adjust this value based on when you want it to collapse
 
-    if (window.scrollY <= threshold) {
+    if (window.scrollY <= threshold && leaderboard.classList.contains('expanded')) {
         leaderboard.classList.remove('expanded');
     }
 }
-// Expose the vote, skip, and toggleLeaderboard functions to the global scope
+
+// Attach the click event to the leaderboard title
+document.querySelector('.leaderboard-header').addEventListener('click', toggleLeaderboardExpanded);
+
+// Expose the vote, skip, and toggleLeaderboardExpanded functions to the global scope
 window.vote = vote;
 window.skipIdea = skipIdea;
 window.toggleLeaderboardExpanded = toggleLeaderboardExpanded;
@@ -199,5 +198,4 @@ window.addEventListener('scroll', handleScroll);
 window.onload = () => {
     loadIdeas();
     loadLeaderboard();
-    document.querySelector('.leaderboard-header').addEventListener('click', toggleLeaderboardExpanded);
 };
