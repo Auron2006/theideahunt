@@ -128,6 +128,8 @@ async function submitIdea(event) {
 
 async function loadLeaderboard() {
     try {
+
+        showAll = false;
         const q = query(collection(db, "ideas"), orderBy("rating", "desc"), limit(10));
         const querySnapshot = await getDocs(q);
         
