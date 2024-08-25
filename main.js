@@ -105,17 +105,22 @@ async function vote(chosenIdea) {
 
 // Handle idea submission
 async function submitIdea(event) {
-    event.preventDefault();
+    event.preventDefault(); // Prevent the form from reloading the page
 
     const newIdeaContent = document.getElementById('newIdea').value.trim();
+    const submitterName = document.getElementById('submitterName').value.trim(); // Get the name
+
     if (newIdeaContent) {
         try {
+            // Add a new document with a generated ID
             await addDoc(collection(db, "ideas"), {
                 content: newIdeaContent,
-                rating: 1200
+                rating: 1200, // Default rating for new ideas
+                name: submitterName || "Anonymous" // Default to "Anonymous" if name is empty
             });
             alert("Idea added successfully!");
-            document.getElementById('newIdea').value = '';
+            document.getElementById('newIdea').value = ''; // Clear the input field
+            document.getElementById('submitterName').value = ''; // Clear the name field
         } catch (e) {
             console.error("Error adding document: ", e);
             alert("There was an error submitting your idea.");
@@ -134,24 +139,26 @@ async function loadLeaderboard() {
         const leaderboardContainer = document.getElementById('leaderboard-entries');
         leaderboardContainer.innerHTML = '';
 
-        let position = 1; 
+        let position = 1;
 
-        querySnapshot.forEach((doc, index) => {
-            console.log('Index:', position);
+        querySnapshot.forEach((doc) => {
             const ideaData = doc.data();
             const ideaSnippet = ideaData.content.length > 20 ? ideaData.content.substring(0, 20) + '...' : ideaData.content;
+            const submitterName = ideaData.name || "Anonymous"; // Use "Anonymous" if no name provided
 
             const entryDiv = document.createElement('div');
             entryDiv.className = 'leaderboard-entry';
             entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
 
             entryDiv.innerHTML = `
-                <span class="idea-position">${position}.</span> <!-- This adds the position number -->
+                <span class="idea-position">${position}.</span>
                 <span class="idea-title">${ideaSnippet}</span>
+                <span class="idea-author" style="font-style: italic; margin-left: 10px;">- ${submitterName}</span>
                 <div class="idea-details" style="display: none;">
                     <p>${ideaData.content}</p>
                 </div>
             `;
+
             leaderboardContainer.appendChild(entryDiv);
 
             position++;
