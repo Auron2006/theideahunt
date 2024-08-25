@@ -65,17 +65,31 @@ function showHeartAnimation(ideaElement) {
 }
 
 
-// Display the selected ideas for voting
+// Display the selected ideas for voting with recency bias less than 5 matches
 function displayIdeas() {
     if (ideas.length > 1) {
+        // Pick the first idea randomly
         currentIndex1 = getRandomIndex(null);
-        currentIndex2 = getRandomIndex(currentIndex1);
+
+        // Filter for ideas with less than 5 matches
+        const lessMatchedIdeas = ideas.filter(idea => idea.number_of_matches < 5);
+
+        if (lessMatchedIdeas.length > 0) {
+            // If there are ideas with less than 5 matches, pick one of them as the second idea
+            const secondIdeaIndex = getRandomIndex(null, lessMatchedIdeas);
+            currentIndex2 = ideas.indexOf(lessMatchedIdeas[secondIdeaIndex]);
+        } else {
+            // Fallback to a random idea if no less matched ideas are found
+            currentIndex2 = getRandomIndex(currentIndex1);
+        }
+
         document.getElementById('idea1').querySelector('p').textContent = ideas[currentIndex1].content;
         document.getElementById('idea2').querySelector('p').textContent = ideas[currentIndex2].content;
     } else {
         console.error('Not enough ideas to display.');
     }
 }
+
 
 // Calculate the Elo rating
 function calculateElo(currentRating, opponentRating, actualScore, kFactor = 32) {
@@ -85,8 +99,7 @@ function calculateElo(currentRating, opponentRating, actualScore, kFactor = 32) 
 
 // Handle the Skip action
 function skipIdea() {
-    currentIndex1 = getRandomIndex(currentIndex2);
-    currentIndex2 = getRandomIndex(currentIndex1);
+    // Simply call the displayIdeas function to skip the current pair and load a new one
     displayIdeas();
 }
 
@@ -144,7 +157,9 @@ async function submitIdea(event) {
             await addDoc(collection(db, "ideas"), {
                 content: newIdeaContent,
                 rating: 1200, // Default rating for new ideas
-                name: submitterName || "Anonymous" // Default to "Anonymous" if name is empty
+                name: submitterName || "Anonymous", // Default to "Anonymous" if name is empty
+                date: new Date(), // Current date and time
+                matches: 0 // Initial number of matches
             });
             alert("Idea added successfully!");
             document.getElementById('newIdea').value = ''; // Clear the input field
@@ -157,6 +172,7 @@ async function submitIdea(event) {
         alert('Please enter an idea before submitting.');
     }
 }
+
 
 // Load and display the leaderboard
 async function loadLeaderboard() {
