@@ -174,6 +174,7 @@ async function submitIdea(event) {
     }
 }
 
+document.getElementById('ideaForm').addEventListener('submit', submitIdea);
 
 
 // Load and display the leaderboard
