@@ -75,16 +75,22 @@ function displayIdeas() {
         const lessMatchedIdeas = ideas.filter(idea => idea.number_of_matches < 5);
 
         if (lessMatchedIdeas.length > 0) {
-            // If there are ideas with less than 5 matches, pick one of them as the second idea
-            const secondIdeaIndex = getRandomIndex(null, lessMatchedIdeas);
-            currentIndex2 = ideas.indexOf(lessMatchedIdeas[secondIdeaIndex]);
+            // Pick a random idea from lessMatchedIdeas
+            const secondIdea = lessMatchedIdeas[Math.floor(Math.random() * lessMatchedIdeas.length)];
+            currentIndex2 = ideas.indexOf(secondIdea);
         } else {
             // Fallback to a random idea if no less matched ideas are found
             currentIndex2 = getRandomIndex(currentIndex1);
         }
 
-        document.getElementById('idea1').querySelector('p').textContent = ideas[currentIndex1].content;
-        document.getElementById('idea2').querySelector('p').textContent = ideas[currentIndex2].content;
+        // Ensure both indices are valid and different
+        if (ideas[currentIndex1] && ideas[currentIndex2]) {
+            document.getElementById('idea1').querySelector('p').textContent = ideas[currentIndex1].content;
+            document.getElementById('idea2').querySelector('p').textContent = ideas[currentIndex2].content;
+        } else {
+            console.error('Invalid idea selection. Resetting selection.');
+            displayIdeas(); // Retry with a new selection
+        }
     } else {
         console.error('Not enough ideas to display.');
     }
