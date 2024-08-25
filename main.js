@@ -153,14 +153,15 @@ async function submitIdea(event) {
 
     if (newIdeaContent) {
         try {
-            // Add a new document with a generated ID
+            console.log("Attempting to submit idea:", newIdeaContent, submitterName);
             await addDoc(collection(db, "ideas"), {
                 content: newIdeaContent,
-                rating: 1200, // Default rating for new ideas
-                name: submitterName || "Anonymous", // Default to "Anonymous" if name is empty
-                date: new Date(), // Current date and time
-                matches: 0 // Initial number of matches
+                rating: 1200,  // Default rating for new ideas
+                name: submitterName || "Anonymous",  // Default to "Anonymous" if name is empty
+                date: new Date().toISOString(),  // Set the current date
+                number_of_matches: 0  // Initialize matches to 0
             });
+            console.log("Idea submitted successfully.");
             alert("Idea added successfully!");
             document.getElementById('newIdea').value = ''; // Clear the input field
             document.getElementById('submitterName').value = ''; // Clear the name field
@@ -172,6 +173,7 @@ async function submitIdea(event) {
         alert('Please enter an idea before submitting.');
     }
 }
+
 
 
 // Load and display the leaderboard
@@ -252,6 +254,7 @@ document.querySelector('.leaderboard-header').addEventListener('click', toggleLe
 // Expose the functions to the global scope
 window.vote = vote;
 window.skipIdea = skipIdea;
+window.submitIdea = submitIdea;
 window.toggleLeaderboardExpanded = toggleLeaderboardExpanded;
 window.addEventListener('scroll', handleScroll);
 
