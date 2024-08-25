@@ -68,34 +68,14 @@ function showHeartAnimation(ideaElement) {
 // Display the selected ideas for voting with recency bias less than 5 matches
 function displayIdeas() {
     if (ideas.length > 1) {
-        // Pick the first idea randomly
         currentIndex1 = getRandomIndex(null);
-
-        // Filter for ideas with less than 5 matches
-        const lessMatchedIdeas = ideas.filter(idea => idea.number_of_matches < 5);
-
-        if (lessMatchedIdeas.length > 0) {
-            // Pick a random idea from lessMatchedIdeas
-            const secondIdea = lessMatchedIdeas[Math.floor(Math.random() * lessMatchedIdeas.length)];
-            currentIndex2 = ideas.indexOf(secondIdea);
-        } else {
-            // Fallback to a random idea if no less matched ideas are found
-            currentIndex2 = getRandomIndex(currentIndex1);
-        }
-
-        // Ensure both indices are valid and different
-        if (ideas[currentIndex1] && ideas[currentIndex2]) {
-            document.getElementById('idea1').querySelector('p').textContent = ideas[currentIndex1].content;
-            document.getElementById('idea2').querySelector('p').textContent = ideas[currentIndex2].content;
-        } else {
-            console.error('Invalid idea selection. Resetting selection.');
-            displayIdeas(); // Retry with a new selection
-        }
+        currentIndex2 = getRandomIndex(currentIndex1);
+        document.getElementById('idea1').querySelector('p').textContent = ideas[currentIndex1].content;
+        document.getElementById('idea2').querySelector('p').textContent = ideas[currentIndex2].content;
     } else {
         console.error('Not enough ideas to display.');
     }
 }
-
 
 // Calculate the Elo rating
 function calculateElo(currentRating, opponentRating, actualScore, kFactor = 32) {
