@@ -56,6 +56,21 @@
             margin-bottom: 60vh;
         }
 
+        .heart-animation {
+            position: absolute;
+            font-size: 24px;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+        }
+
+        .heart-animation.animate {
+            transform: translate(-50%, -50%) scale(2);
+            opacity: 1;
+        }
+
+
         /* Idea Card Styles */
         .idea {
             width: 100%;

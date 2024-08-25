@@ -42,6 +42,29 @@ function getRandomIndex(excludeIndex) {
     return randomIndex;
 }
 
+function showHeartAnimation(ideaElement) {
+    const heart = document.createElement('div');
+    heart.className = 'heart-animation';
+    heart.innerHTML = '❤️';
+
+    // Position the heart over the clicked idea
+    const rect = ideaElement.getBoundingClientRect();
+    heart.style.left = `${rect.left + rect.width / 2}px`;
+    heart.style.top = `${rect.top + rect.height / 2}px`;
+
+    document.body.appendChild(heart);
+
+    // Trigger animation and remove the heart after animation ends
+    setTimeout(() => {
+        heart.classList.add('animate');
+    }, 10);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 1000); // Duration for heart to disappear
+}
+
+
 // Display the selected ideas for voting
 function displayIdeas() {
     if (ideas.length > 1) {
@@ -70,6 +93,11 @@ function skipIdea() {
 // Handle voting and updating ratings
 async function vote(chosenIdea) {
     let winnerIndex, loserIndex;
+
+    const ideaElement = document.getElementById(chosenIdea);
+
+    // Show the heart animation
+    showHeartAnimation(ideaElement);
 
     if (chosenIdea === 'idea1') {
         winnerIndex = currentIndex1;
