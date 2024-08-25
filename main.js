@@ -134,7 +134,10 @@ async function loadLeaderboard() {
         const leaderboardContainer = document.getElementById('leaderboard-entries');
         leaderboardContainer.innerHTML = '';
 
-        querySnapshot.forEach((doc) => {
+        let position = 1; 
+
+        querySnapshot.forEach((doc, index) => {
+            console.log('Index:', position);
             const ideaData = doc.data();
             const ideaSnippet = ideaData.content.length > 20 ? ideaData.content.substring(0, 20) + '...' : ideaData.content;
 
@@ -143,12 +146,15 @@ async function loadLeaderboard() {
             entryDiv.onclick = () => toggleIdeaDetails(entryDiv);
 
             entryDiv.innerHTML = `
+                <span class="idea-position">${position}.</span> <!-- This adds the position number -->
                 <span class="idea-title">${ideaSnippet}</span>
                 <div class="idea-details" style="display: none;">
                     <p>${ideaData.content}</p>
                 </div>
             `;
             leaderboardContainer.appendChild(entryDiv);
+
+            position++;
         });
     } catch (error) {
         console.error('Error loading leaderboard:', error);
